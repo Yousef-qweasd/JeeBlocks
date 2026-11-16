@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+</head>
+<body>
+    <header class="menu-bar">
+        <div class="menu">
+            <input class="menu-btn" value="New File"></input>
+        </div>
+        <div class="menu">
+            <button class="menu-btn">Settings</button>
+            <div class="menu-content">
+                <button id="themeToggle">🌙</button>
+            </div>
+        </div>
+        <div class="menu">
+            <button class="menu-btn">File</button>
+            <div class="menu-content">
+                <button onclick="addFile()">New File</button>
+                <button>Open File</button>
+                <button onclick="addFolder()">New Folder</button>
+                <button onclick="chose_Folder()">Open Folder</button>
+                <button onclick="cutItem()">Cut</button>
+                <button onclick="renameItem()">Rename</button>
+                <button onclick="deleteItem()">Delete</button>
+                <button onclick="copyItem()">Copy</button>
+                <button onclick="pasteItem()">Paste</button>
+            </div>
+        </div>
+        <div class="menu">
+            <button class="menu-btn">Edit</button>
+            <div class="menu-content">
+                <button>Undo</button>
+                <button>Redo</button>
+            </div>
+        </div>
+    </header>
+    <div class="workspace">
+        <aside id="filemanger">
+            <div class="title">File Explorer</div>
+            <div id="tree"></div>
+        </aside>
+        <div id="blocklyDiv"></div>
+        <aside id="properties">
+            <div class="title">Properties</div>
+        </aside>
+        <div id="console">
+            Console
+            <p editable="true">
+                hi
+            </p>
+        </div>
+    </div>
+    <xml id="toolbox" style="display:none">
+        <category name="Logic" id="Logic"></category>
+        <category name="Loops" id="Loops"></category>
+        <category name="Maths" id="Maths"></category>
+        <category name="Variables" id="variables"></category>
+        <category name="text" id="text"></category>
+        <category name="lists" id="lists"></category>
+        <category name="procedures" id="procedures"></category>
+    </xml>
+</body>
+<script src="{{ url_for('static', filename='JeeBlocks/core/blockly.js') }}"></script>
+<script src="{{ url_for('static', filename='JeeBlocks/core/main.js') }}"></script>
+<script src="{{ url_for('static', filename='JeeBlocks/core/filemanager.js') }}"></script>
+<script src="{{ url_for('static', filename='JeeBlocks/compiler/AST.js') }}"></script>
+<script src="{{ url_for('static', filename='JeeBlocks/general/variables.js') }}"></script>
+<script src="{{ url_for('static', filename='JeeBlocks/general/loops.js') }}"></script>
+<script src="{{ url_for('static', filename='JeeBlocks/general/logic.js') }}"></script>
+<script src="{{ url_for('static', filename='JeeBlocks/general/lists.js') }}"></script>
+<script src="{{ url_for('static', filename='JeeBlocks/general/math.js') }}"></script>
+<script src="{{ url_for('static', filename='JeeBlocks/general/procedures.js') }}"></script>
+<script src="{{ url_for('static', filename='JeeBlocks/general/text.js') }}"></script>
+<script src="{{ url_for('static', filename='JeeBlocks/languages/python/blocks.js') }}"></script>
+</html>

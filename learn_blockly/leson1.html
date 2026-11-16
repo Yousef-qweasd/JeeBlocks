@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Blockly Editor</title>
+    <script src="https://unpkg.com/blockly/blockly_compressed.js"></script>
+    <script src="https://unpkg.com/blockly/blocks_compressed.js"></script>
+    <script src="https://unpkg.com/blockly/javascript_compressed.js"></script>
+    <script src="https://unpkg.com/blockly/msg/en.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #17191f;
+            color: white;
+        }
+        header {
+            padding: 14px 20px;
+            background: #242832;
+        }
+        main {
+            padding: 15px;
+        }
+        #blocklyDiv {
+            width: 100%;
+            height: 520px;
+            background: white;
+        }
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        button {
+            padding: 9px 15px;
+            border: 0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        pre {
+            background: #242832;
+            padding: 15px;
+            min-height: 120px;
+            overflow: auto;
+            white-space: pre-wrap;
+        }
+        h3 {
+            margin-top: 22px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>My Blockly Editor</h2>
+    </header>
+    <main>
+        <div class="toolbar">
+            <button onclick="generateCode()">Generate Code</button>
+            <button onclick="countBlocks()">Count Blocks</button>
+            <button onclick="saveWorkspace()">Save</button>
+            <button onclick="loadWorkspace()">Load</button>
+            <button onclick="clearWorkspace()">Clear</button>
+        </div>
+        <div id="blocklyDiv"></div>
+        <h3>Generated JavaScript</h3>
+        <pre id="codeOutput">// Generated code will appear here</pre>
+        <h3>Workspace Information</h3>
+        <pre id="infoOutput">Workspace is ready.</pre>
+    </main>
+    <script>
+        const toolbox = {
+            kind: "categoryToolbox",
+            contents: [
+                {
+                    kind: "category",
+                    name: "Logic",
+                    categorystyle: "logic_category",
+                    contents: [
+                        { kind: "block", type: "controls_if" },
+                        { kind: "block", type: "logic_compare" },
+                        { kind: "block", type: "logic_operation" },
+                        { kind: "block", type: "logic_boolean" }
+                    ]
+                },
+                {
+                    kind: "category",
+                    name: "Loops",
+                    categorystyle: "loop_category",
+                    contents: [
+                        { kind: "block", type: "controls_repeat_ext" },
+                        { kind: "block", type: "controls_whileUntil" }
+                    ]
+                },
+                {
+                    kind: "category",
+                    name: "Math",
+                    categorystyle: "math_category",
+                    contents: [
+                        { kind: "block", type: "math_number" },
+                        { kind: "block", type: "math_arithmetic" },
+                        { kind: "block", type: "math_single" }
+                    ]
+                },
+                {
+                    kind: "category",
+                    name: "Text",
+                    categorystyle: "text_category",
+                    contents: [
+                        { kind: "block", type: "text" },
+                        { kind: "block", type: "text_print" },
+                        { kind: "block", type: "text_join" }
+                    ]
+                },
+                {
+                    kind: "category",
+                    name: "Variables",
+                    custom: "VARIABLE"
+                }
+            ]
+        };
+        const workspace = Blockly.inject("blocklyDiv", {
+            toolbox: toolbox,
+            scrollbars: true,
+            trashcan: true,
+            zoom: {
+                controls: true,
+                wheel: true,
+                startScale: 1,
+                maxScale: 2,
+                minScale: 0.5,
+                scaleSpeed: 1.2
+            }
+        });
+        function generateCode() {
+            const code =
+                javascript.javascriptGenerator.workspaceToCode(workspace);
+            document.getElementById("codeOutput").textContent =
+                code || "// Empty workspace";
+        }
+        function countBlocks() {
+            const blocks = workspace.getAllBlocks();
+            document.getElementById("infoOutput").textContent =
+                "Total Blocks: " + blocks.length +
+                "\nWorkspace ID: " + workspace.id;
+        }
+        function saveWorkspace() {
+            const state = Blockly.serialization.workspaces.save(workspace);
+            localStorage.setItem("myBlocklyProject", JSON.stringify(state));
+            document.getElementById("infoOutput").textContent =
+                "Project saved successfully.";
+        }
+        function loadWorkspace() {
+            const saved = localStorage.getItem("myBlocklyProject");
+            if (!saved) {
+                alert("No saved project found.");
+                return;
+            }
+            workspace.clear();
+            const state = JSON.parse(saved);
+            Blockly.serialization.workspaces.load(state, workspace);
+            document.getElementById("infoOutput").textContent =
+                "Project loaded successfully.";
+        }
+        function clearWorkspace() {
+            workspace.clear();
+            generateCode();
+            countBlocks();
+        }
+        workspace.addChangeListener(function (event) {
+            if (event.isUiEvent) return;
+            generateCode();
+            countBlocks();
+        });
+        generateCode();
+        countBlocks();
+    </script>
+</body>
+</html>
